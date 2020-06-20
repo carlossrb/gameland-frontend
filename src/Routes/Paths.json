@@ -1,0 +1,6 @@
+{
+  "SignIn": "/",
+  "SignUp": "/signup",
+  "Reset": "/reset/:token?",
+  "Auth": "/auth"
+}
