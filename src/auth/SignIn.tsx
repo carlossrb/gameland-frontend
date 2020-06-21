@@ -49,6 +49,7 @@ const SignIn = (props: DarkStateProps) => {
     error: false,
     password: "",
     load: false,
+    checked: false,
   });
 
   // Funções para mostrar ou não a senha
@@ -76,12 +77,15 @@ const SignIn = (props: DarkStateProps) => {
   //Entrar no sistema
   const signIn = () => {
     setValues({ ...values, load: true });
+    
     const path = localStorage.getItem("redirectPathGameland")!;
+
     setPath(path === "/" ? "/auth" : path);
     AxiosPost("/auth/validate", values)
       .then(({ data }) => {
         setValues({ ...values, load: false, openAuth: true });
         localStorage.setItem("tokenJwtGameland", data.token);
+        localStorage.setItem("keepConnectedGameland", String(values.checked))
         //Global (seta parâmetros no context)
         SetNewData({ type: "LOGIN_DATA", values: data });
       })
@@ -179,10 +183,7 @@ const SignIn = (props: DarkStateProps) => {
               control={
                 <Checkbox
                   onChange={({ target }) =>
-                    localStorage.setItem(
-                      "keepConnectedGameland",
-                      String(target.checked)
-                    )
+                    setValues({ ...values, checked: target.checked })
                   }
                   icon={<LockOpen />}
                   checkedIcon={<Lock />}

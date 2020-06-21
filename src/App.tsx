@@ -95,7 +95,7 @@ const App: React.FC = () => {
             {"Entre no sistema para acessar o conteúdo"}
           </Alert>
         </Snackbar>
-        {(connected === 2 || 3) && <Redirect to={path} />}
+        {(connected === 2 || connected === 3) && <Redirect to={path} />}
         <Routes setDarkState={setDarkState} darkState={darkState} />
       </ThemeProvider>
     </BrowserRouter>
