@@ -16,7 +16,7 @@ import {
   Grow,
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import logo from "../auth/gameland.io.png";
+import logo from "../Auth/gameland.io.png";
 import {
   Visibility,
   VisibilityOff,

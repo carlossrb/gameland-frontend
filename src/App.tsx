@@ -10,7 +10,7 @@ import Routes from "./Routes/Routes";
 import { AxiosGet } from "./utils/index";
 import { Alert } from "@material-ui/lab";
 import PathRoutes from "./Routes/Paths.json";
-import logo from "./auth/gameland.io.png";
+import logo from "./Auth/gameland.io.png";
 import { store } from "./Store";
 
 const App: React.FC = () => {

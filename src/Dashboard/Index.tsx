@@ -2,33 +2,44 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { LottieAnimation } from "../utils";
-import TopBar from "./TopBar"
+import TopBar from "../Components/TopBar"
+import { DarkStateProps } from "../Auth/Copyright";
+import AddCards from "../Components/AddCard";
+import { Fab, makeStyles, Theme, createStyles } from "@material-ui/core";
+import { Clear } from "@material-ui/icons";
 
-const Auth: React.FC = () => {
+const Auth: React.FC <DarkStateProps>= (props) => {
+  const style = useStyles()
 
-  
   return (
     <React.Fragment>
-        <TopBar/>
       <Container>
         <Box my={2}>
+        <TopBar {...props}/>
+        <Fab variant="extended" size="small" color="secondary" className={style.fabStyle}>
+          <Clear />
+          Limpar filtros
+        </Fab>
           <LottieAnimation
-            style={{ width: 600, marginTop: 40 }}
+            style={{ width: 450, marginTop: 40 }}
+            text="Nada para exibir :("
             name="pacman"
           />
+        <AddCards/>
         </Box>
       </Container>
     </React.Fragment>
   );
 };
 
-// import React from 'react'
-// import { LottieAnimation } from '../utils';
-
-// const Auth: React.FC = ()=>{
-//     return(
-//             <LottieAnimation  style={{width:600, marginTop: 40}} name='pacman'/>
-//     )
-// }
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    fabStyle: {
+      position: "absolute",
+      top: theme.spacing(10),
+      right: theme.spacing(2),
+    },
+  }),
+);
 
 export default Auth;

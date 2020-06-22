@@ -11,7 +11,7 @@ import {
   Slide,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import logo from "../auth/gameland.io.png";
+import logo from "../Auth/gameland.io.png";
 import { Visibility, VisibilityOff, Send } from "@material-ui/icons";
 import { AxiosGet, AxiosPost } from "../utils/index";
 import { Alert } from "@material-ui/lab";
