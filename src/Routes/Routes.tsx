@@ -3,10 +3,10 @@ import SignIn from "../Auth/SignIn";
 import SignUp from "../Auth/SignUp";
 import { Switch, Route } from "react-router-dom";
 import NotFoundPage from "../Page404";
-import { DarkStateProps } from "../Auth/Copyright";
 import ResetPassword from "../Auth/Reset_password";
 import Dash from "../Dashboard/Index";
 import Path from "./Paths.json"
+import { DarkStateProps } from "../react-app-env";
 
 const Routes = (props: DarkStateProps) => {
 

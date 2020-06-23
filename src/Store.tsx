@@ -1,16 +1,7 @@
 import React, { createContext, useReducer, ReactNode } from "react";
+import { UserData } from "./react-app-env";
 
-interface User {
-  _id: string;
-  email: string;
-  cnpj: string;
-  registerDate: string;
-  username: string;
-}
-interface UserData {
-  user: User;
-  token: string;
-}
+//Iterface de dados do user
 interface Action {
   type: string;
   values: UserData;
@@ -23,6 +14,7 @@ const initialState = {
     email: "",
     registerDate: "",
     username: "",
+    permission: 1
   },
   token: "",
   //...

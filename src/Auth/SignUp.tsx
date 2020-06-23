@@ -27,8 +27,9 @@ import {
 import { AxiosPost, validateEmail, ShowSnackBarAlert } from "../utils/index";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { green } from "@material-ui/core/colors";
-import Copyright, { DarkStateProps } from "./Copyright";
+import Copyright from "./Copyright";
 import { store } from "../Store";
+import { DarkStateProps } from "../react-app-env";
 
 interface State {
   username: string;

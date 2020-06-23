@@ -25,7 +25,8 @@ import {
 import MenuDrawer from "./Menu";
 import { Redirect } from "react-router-dom";
 import Path from "../Routes/Paths.json";
-import { DarkStateProps, DarkMode } from "../Auth/Copyright";
+import { DarkMode } from "../Auth/Copyright";
+import { DarkStateProps } from "../react-app-env";
 
 // largura do menu aberto
 const drawerWidth = 210;
@@ -39,6 +40,7 @@ const TopBar: React.FC<DarkStateProps> = (props) => {
   const [logout, setLogout] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useTheme();
+  
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };

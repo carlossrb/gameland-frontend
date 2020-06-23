@@ -25,8 +25,9 @@ import {
 } from "@material-ui/icons";
 import Password from "./Password";
 import { AxiosPost, ShowSnackBarAlert } from "../utils/index";
-import Copyright, { DarkStateProps } from "./Copyright";
+import Copyright from "./Copyright";
 import { store } from "../Store";
+import { DarkStateProps } from "../react-app-env";
 
 /**
  * Tela principal de login

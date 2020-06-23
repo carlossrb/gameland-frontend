@@ -2,13 +2,7 @@ import { Typography, IconButton, useTheme } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { NightsStay, WbSunny } from "@material-ui/icons";
 import React from "react";
-
-export interface DarkStateProps {
-  setDarkState: React.Dispatch<React.SetStateAction<boolean>>;
-  darkState: boolean;
-  color?:string
-  size?:"small"|"medium"
-}
+import { DarkStateProps } from "../react-app-env";
 
 const Copyright: React.FC<DarkStateProps> = (props) => {
   const theme = useTheme();
