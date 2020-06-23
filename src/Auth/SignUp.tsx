@@ -7,7 +7,6 @@ import {
   Button,
   IconButton,
   TextField,
-  Snackbar,
   CircularProgress,
   InputAdornment,
   FormControlLabel,
@@ -25,25 +24,23 @@ import {
   Work,
   SportsEsportsOutlined,
 } from "@material-ui/icons";
-import { AxiosPost, validateEmail } from "../utils/index";
-import { Alert } from "@material-ui/lab";
+import { AxiosPost, validateEmail, ShowSnackBarAlert } from "../utils/index";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { green } from "@material-ui/core/colors";
 import Copyright, { DarkStateProps } from "./Copyright";
 import { store } from "../Store";
 
-
-interface State{
-  username: string,
-  checked: boolean,
-  openAuth: boolean,
-  showPassword: boolean,
-  email: string,
-  errormsg: string,
-  error: boolean,
-  password: string,
-  load: boolean,
-  cnpj: string,
+interface State {
+  username: string;
+  checked: boolean;
+  openAuth: boolean;
+  showPassword: boolean;
+  email: string;
+  errormsg: string;
+  error: boolean;
+  password: string;
+  load: boolean;
+  cnpj: string;
 }
 /**
  * Tela principal de login
@@ -51,9 +48,9 @@ interface State{
  */
 const SignUp = (props: DarkStateProps) => {
   const classes = useStyles();
-  const UserData = useContext(store)
-  const {SetNewData} = UserData
-  
+  const UserData = useContext(store);
+  const { SetNewData } = UserData;
+
   const [values, setValues] = useState<State>({
     username: "",
     checked: false,
@@ -108,7 +105,7 @@ const SignUp = (props: DarkStateProps) => {
   const signUp = () => {
     setValues({ ...values, load: true });
     AxiosPost("/auth/register", values)
-      .then(({ data }:any) => {
+      .then(({ data }: any) => {
         setValues({ ...values, load: false, openAuth: true });
         localStorage.setItem("tokenJwtGameland", data.token);
         localStorage.setItem("keepConnectedGameland", "false");
@@ -131,34 +128,20 @@ const SignUp = (props: DarkStateProps) => {
     localStorage.setItem("redirectPathGameland", "/");
   }, []);
 
-  //Fecha msg
-  const handleClose = (
-    event: React.SyntheticEvent | React.MouseEvent,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setValues({ ...values, error: false });
-  };
-
   return (
     <Slide direction="left" in={true} mountOnEnter unmountOnExit>
       <Container component="main" maxWidth="xs">
         {values.openAuth && <Redirect to={"/auth"} />}
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          open={values.error}
-          onClose={handleClose}
-          autoHideDuration={5000}
-        >
-          <Alert variant="filled" severity={"error"}>
-            {values.errormsg}
-          </Alert>
-        </Snackbar>
+        {values.error && (
+          <ShowSnackBarAlert
+            msg={values.errormsg}
+            anchorOrigin={["top", "center"]}
+            dispatchClose={() => setValues({ ...values, error: false })}
+            openCondition={values.error}
+            severity={"error"}
+            time={5000}
+          />
+        )}
         <div className={classes.paper}>
           <img src={logo} alt="gameland.io" />
           <Typography component="h1" variant="h5">

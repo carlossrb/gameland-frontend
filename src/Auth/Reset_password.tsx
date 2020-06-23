@@ -7,14 +7,12 @@ import {
   IconButton,
   TextField,
   CircularProgress,
-  Snackbar,
   Slide,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import logo from "../Auth/gameland.io.png";
 import { Visibility, VisibilityOff, Send } from "@material-ui/icons";
-import { AxiosGet, AxiosPost } from "../utils/index";
-import { Alert } from "@material-ui/lab";
+import { AxiosGet, AxiosPost, ShowSnackBarAlert } from "../utils/index";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { store } from "../Store";
 
@@ -34,9 +32,9 @@ interface State {
  * @param {Props} props
  */
 const ResetPassword: React.FC<Props> = (props) => {
-  const UserData = useContext(store)
-  const {SetNewData} = UserData
-  
+  const UserData = useContext(store);
+  const { SetNewData } = UserData;
+
   const classes = useStyles();
   const [tokenEnableLoads, setToken] = useState({
     resetPasswordLoad: false,
@@ -132,33 +130,21 @@ const ResetPassword: React.FC<Props> = (props) => {
     setValues({ ...values, newPassword: value });
   };
 
-  //Fecha msg
-  const handleClose = (
-    event: React.SyntheticEvent | React.MouseEvent,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setToken({ ...tokenEnableLoads, error: false });
-  };
-
   return (
     <Slide direction="left" in={true} mountOnEnter unmountOnExit>
       <Container component="main" maxWidth="xs">
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={tokenEnableLoads.error}
-          onClose={handleClose}
-          autoHideDuration={5000}
-        >
-          <Alert variant="filled" severity={"error"}>
-            {tokenEnableLoads.errormsg}
-          </Alert>
-        </Snackbar>
+        {tokenEnableLoads.error && (
+          <ShowSnackBarAlert
+            msg={tokenEnableLoads.errormsg}
+            anchorOrigin={["top", "right"]}
+            dispatchClose={() =>
+              setToken({ ...tokenEnableLoads, error: false })
+            }
+            openCondition={tokenEnableLoads.error}
+            severity={"error"}
+            time={5000}
+          />
+        )}
         {tokenEnableLoads.tokenLoad && <Redirect to={"/"} />}
         {tokenEnableLoads.redirect && <Redirect to={"/auth"} />}
         <div className={classes.paper}>

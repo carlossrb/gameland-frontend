@@ -1,21 +1,19 @@
-import React, { useState, useLayoutEffect, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { BrowserRouter, Redirect } from "react-router-dom";
 import {
   ThemeProvider,
   createMuiTheme,
-  CssBaseline,
-  Snackbar,
+  CssBaseline
 } from "@material-ui/core";
 import Routes from "./Routes/Routes";
-import { AxiosGet } from "./utils/index";
-import { Alert } from "@material-ui/lab";
+import { AxiosGet, ShowSnackBarAlert } from "./utils/index";
 import PathRoutes from "./Routes/Paths.json";
 import logo from "./Auth/gameland.io.png";
 import { store } from "./Store";
 
 const App: React.FC = () => {
-  const UserData = useContext(store)
-  const {SetNewData} = UserData
+  const UserData = useContext(store);
+  const { SetNewData } = UserData;
   const [path, setPath] = useState(window.location.pathname);
   const [connected, setConnected] = useState(1);
   const [darkState, setDarkState] = useState(
@@ -41,7 +39,7 @@ const App: React.FC = () => {
   });
 
   // Redireciona login
-  useLayoutEffect(() => {
+  useEffect(() => {
     const keepConnected =
       localStorage.getItem("keepConnectedGameland") === "true";
     localStorage.setItem("redirectPathGameland", path);
@@ -50,7 +48,7 @@ const App: React.FC = () => {
     const pathReset: string = PathRoutes.Reset.split("/")[1];
 
     AxiosGet("/auth/check")
-      .then(({data}) => {
+      .then(({ data }) => {
         if (keepConnected) {
           setPath(path === PathRoutes.SignIn ? PathRoutes.Auth : path);
         } else setPath(path);
@@ -67,34 +65,20 @@ const App: React.FC = () => {
       });
   }, []);
 
-  //Fecha Snackbar
-  const handleClose = (
-    event: React.SyntheticEvent | React.MouseEvent,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setConnected(1);
-  };
-
   return connected >= 1 ? (
     <BrowserRouter>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={connected === 3 && path === PathRoutes.SignIn}
-          onClose={handleClose}
-          autoHideDuration={6000}
-        >
-          <Alert variant="filled" severity={"info"}>
-            {"Entre no sistema para acessar o conteúdo"}
-          </Alert>
-        </Snackbar>
+        {connected === 3 && path === PathRoutes.SignIn && (
+          <ShowSnackBarAlert
+            msg={"Entre no sistema para acessar o conteúdo"}
+            anchorOrigin={["top", "right"]}
+            dispatchClose={() => setConnected(1)}
+            openCondition={connected === 3 && path === PathRoutes.SignIn}
+            severity={"info"}
+            time={6000}
+          />
+        )}
         {(connected === 2 || connected === 3) && <Redirect to={path} />}
         <Routes setDarkState={setDarkState} darkState={darkState} />
       </ThemeProvider>

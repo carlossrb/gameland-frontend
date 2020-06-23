@@ -1,6 +1,16 @@
 import API from "./API";
 import React, { useEffect, CSSProperties } from "react";
 import Lottie from "lottie-web";
+import {
+  Snackbar,
+  makeStyles,
+  Theme,
+  createStyles,
+  Backdrop,
+  CircularProgress,
+  Typography,
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 /**
  * Validar email
@@ -35,11 +45,72 @@ const AxiosPost = async (adress: string, body: {} = {}) => {
   return await API.post(adress, body).then((res) => res);
 };
 
+interface PropsSnackBar {
+  dispatchClose: () => void;
+  openCondition: boolean;
+  time: number;
+  anchorOrigin: ["top" | "bottom", "left" | "center" | "right"];
+  msg: string;
+  severity?: "info" | "success" | "warning" | "error";
+}
+const ShowSnackBarAlert: React.FC<PropsSnackBar> = (props) => {
+  const {
+    dispatchClose,
+    openCondition,
+    severity,
+    time,
+    msg,
+    anchorOrigin,
+  } = props;
+
+  const handleClose = (
+    event: React.SyntheticEvent | React.MouseEvent,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    dispatchClose();
+  };
+
+  return (
+    <Snackbar
+      anchorOrigin={{
+        vertical: anchorOrigin[0],
+        horizontal: anchorOrigin[1],
+      }}
+      open={openCondition}
+      onClose={handleClose}
+      autoHideDuration={time}
+    >
+      <Alert variant="filled" severity={severity}>
+        {msg}
+      </Alert>
+    </Snackbar>
+  );
+};
+
+interface BlacdropProps {
+  color?: string;
+  open: boolean;
+}
+
+const ShowBlackDrop: React.FC<BlacdropProps> = (props) => {
+  const classes = useStyles("#fff");
+
+  return (
+    <Backdrop className={classes.backdrop} open={props.open}>
+      <CircularProgress color="inherit" />
+      <Typography variant="h6">Aguarde...</Typography>
+    </Backdrop>
+  );
+};
+
 interface Props {
   name: string;
   style?: CSSProperties;
   text?: string;
-  speed?: number
+  speed?: number;
 }
 /**
  * Render lottie animations
@@ -71,10 +142,26 @@ const LottieAnimation: React.FC<Props> = (props) => {
         justifyContent: "center",
       }}
     >
-      <div style={props.style} ref={(rf) => (ref = rf)}/>
-        {props.text && <h3>{props.text}</h3>}
+      <div style={props.style} ref={(rf) => (ref = rf)} />
+      {props.text && <h3>{props.text}</h3>}
     </div>
   );
 };
 
-export { validateEmail, AxiosGet, AxiosPost, LottieAnimation };
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: (color: string) => color,
+    },
+  })
+);
+
+export {
+  validateEmail,
+  AxiosGet,
+  AxiosPost,
+  ShowBlackDrop,
+  LottieAnimation,
+  ShowSnackBarAlert,
+};

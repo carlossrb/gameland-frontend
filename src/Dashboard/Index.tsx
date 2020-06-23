@@ -23,6 +23,7 @@ const Auth: React.FC <DarkStateProps>= (props) => {
           <LottieAnimation
             style={{ width: 450, marginTop: 40 }}
             text="Nada para exibir :("
+            speed={0.8}
             name="pacman"
           />
         <AddCards/>

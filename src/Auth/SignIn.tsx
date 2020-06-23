@@ -11,7 +11,6 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Snackbar,
   CircularProgress,
   Grow,
 } from "@material-ui/core";
@@ -25,8 +24,7 @@ import {
   Lock,
 } from "@material-ui/icons";
 import Password from "./Password";
-import { AxiosPost } from "../utils/index";
-import { Alert } from "@material-ui/lab";
+import { AxiosPost, ShowSnackBarAlert } from "../utils/index";
 import Copyright, { DarkStateProps } from "./Copyright";
 import { store } from "../Store";
 
@@ -77,7 +75,7 @@ const SignIn = (props: DarkStateProps) => {
   //Entrar no sistema
   const signIn = () => {
     setValues({ ...values, load: true });
-    
+
     const path = localStorage.getItem("redirectPathGameland")!;
 
     setPath(path === "/" ? "/auth" : path);
@@ -85,7 +83,7 @@ const SignIn = (props: DarkStateProps) => {
       .then(({ data }) => {
         setValues({ ...values, load: false, openAuth: true });
         localStorage.setItem("tokenJwtGameland", data.token);
-        localStorage.setItem("keepConnectedGameland", String(values.checked))
+        localStorage.setItem("keepConnectedGameland", String(values.checked));
         //Global (seta parâmetros no context)
         SetNewData({ type: "LOGIN_DATA", values: data });
       })
@@ -102,35 +100,21 @@ const SignIn = (props: DarkStateProps) => {
       });
   };
 
-  //Fecha msg
-  const handleClose = (
-    event: React.SyntheticEvent | React.MouseEvent,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setValues({ ...values, error: false });
-  };
-
   return (
     <Grow in={true}>
       <Container component="main" maxWidth="xs">
         {values.openAuth && <Redirect to={path} />}
         <Password openModal={openModal} open={values.showModal} />
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          open={values.error}
-          onClose={handleClose}
-          autoHideDuration={5000}
-        >
-          <Alert variant="filled" severity={"error"}>
-            {values.errormsg}
-          </Alert>
-        </Snackbar>
+        {values.error && (
+          <ShowSnackBarAlert
+            msg={values.errormsg}
+            anchorOrigin={["top", "center"]}
+            dispatchClose={() => setValues({ ...values, error: false })}
+            openCondition={values.error}
+            severity={"error"}
+            time={5000}
+          />
+        )}
         <div className={classes.paper}>
           <img src={logo} alt="gameland.io" />
           <Typography component="h1" variant="h5">

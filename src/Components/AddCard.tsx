@@ -7,7 +7,7 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import GameIcon from "@material-ui/icons/Games";
 import { store } from "../Store";
-import AddNewGame from "./AddNewGame";
+import AddNewGame from "../Dashboard/AddNewGame";
 import Filter from "./Filter";
 import SearchGame from "./Search";
 
@@ -28,7 +28,7 @@ export default function AddCards() {
     openNewGame: false,
   });
 
-  if (NewData.user.permission !== 3) actions.pop();
+  if (NewData.user.permission !== 3) actions.pop()
 
   const handleClose = () => {
     setOpen(false);
