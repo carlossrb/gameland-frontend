@@ -33,7 +33,7 @@ interface State {
  */
 const ResetPassword: React.FC<Props> = (props) => {
   const UserData = useContext(store);
-  const { SetNewData } = UserData;
+  const { setDataReducer } = UserData;
 
   const classes = useStyles();
   const [tokenEnableLoads, setToken] = useState({
@@ -95,7 +95,7 @@ const ResetPassword: React.FC<Props> = (props) => {
           redirect: true,
         });
         //Global (seta parâmetros no context)
-        SetNewData({ type: "LOGIN_DATA", values: data });
+        setDataReducer({ type: "LOGIN_DATA", values: data });
       })
       .catch(({ response }) => {
         localStorage.setItem("tokenJwtGameland", "");

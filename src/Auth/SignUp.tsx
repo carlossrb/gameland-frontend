@@ -50,7 +50,7 @@ interface State {
 const SignUp = (props: DarkStateProps) => {
   const classes = useStyles();
   const UserData = useContext(store);
-  const { SetNewData } = UserData;
+  const { setDataReducer } = UserData;
 
   const [values, setValues] = useState<State>({
     username: "",
@@ -107,11 +107,11 @@ const SignUp = (props: DarkStateProps) => {
     setValues({ ...values, load: true });
     AxiosPost("/auth/register", values)
       .then(({ data }: any) => {
-        setValues({ ...values, load: false, openAuth: true });
         localStorage.setItem("tokenJwtGameland", data.token);
         localStorage.setItem("keepConnectedGameland", "false");
+        setValues({ ...values, load: false, openAuth: true });
         //Global (seta parâmetros no context)
-        SetNewData({ type: "LOGIN_DATA", values: data });
+        setDataReducer({ type: "LOGIN_DATA", values: data });
       })
       .catch(({ response }) => {
         setValues({

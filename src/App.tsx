@@ -13,7 +13,7 @@ import { store } from "./Store";
 
 const App: React.FC = () => {
   const UserData = useContext(store);
-  const { SetNewData } = UserData;
+  const { setDataReducer } = UserData;
   const [path, setPath] = useState(window.location.pathname);
   const [connected, setConnected] = useState(1);
   const [darkState, setDarkState] = useState(
@@ -55,7 +55,7 @@ const App: React.FC = () => {
         setConnected(2);
         // popula os dados do redux com o response
         //Global (seta parâmetros no context)
-        SetNewData({ type: "LOGIN_DATA", values: data });
+        setDataReducer({ type: "LOGIN_DATA", values: data });
       })
       .catch((error) => {
         if (pathParts === "/" + pathReset || pathParts === PathRoutes.SignUp)

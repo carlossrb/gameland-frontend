@@ -7,11 +7,12 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import GameIcon from "@material-ui/icons/Games";
 import { store } from "../Store";
-import AddNewGame from "../Dashboard/AddNewGame";
+import AddNewGame from "./AddNewGame";
 import Filter from "./Filter";
 import SearchGame from "./Search";
+import { PropsAddCard } from "../react-app-env";
 
-export default function AddCards() {
+export default function FloatingBtn(props: PropsAddCard) {
   let actions = [
     { icon: <FilterListIcon />, name: "Filtrar" },
     { icon: <SearchIcon />, name: "Buscar" },
@@ -20,7 +21,7 @@ export default function AddCards() {
 
   const classes = useStyles();
   const UserData = useContext(store);
-  const { NewData } = UserData;
+  const { dataReducer } = UserData;
   const [open, setOpen] = useState(false);
   const [dialogs, setOpenDialogs] = useState({
     openSearch: false,
@@ -28,7 +29,7 @@ export default function AddCards() {
     openNewGame: false,
   });
 
-  if (NewData.user.permission !== 3) actions.pop()
+  if (dataReducer.user.permission !== 3) actions.pop()
 
   const handleClose = () => {
     setOpen(false);
@@ -46,9 +47,9 @@ export default function AddCards() {
 
   return (
     <>
-      <AddNewGame open={dialogs} setOpen={setOpenDialogs} />
-      <Filter open={dialogs} setOpen={setOpenDialogs} />
-      <SearchGame open={dialogs} setOpen={setOpenDialogs} />
+      <AddNewGame {...props} open={dialogs} setOpen={setOpenDialogs} />
+      <Filter {...props} open={dialogs} setOpen={setOpenDialogs} />
+      <SearchGame {...props} open={dialogs} setOpen={setOpenDialogs} />
       <SpeedDial
         ariaLabel="SpeedDial example"
         className={classes.speedDial}
@@ -75,7 +76,7 @@ export default function AddCards() {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     speedDial: {
-      position: "absolute",
+      position: "fixed",
       bottom: theme.spacing(2),
       right: theme.spacing(2),
     },

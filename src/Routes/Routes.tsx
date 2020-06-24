@@ -1,7 +1,7 @@
 import React from "react";
 import SignIn from "../Auth/SignIn";
 import SignUp from "../Auth/SignUp";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import NotFoundPage from "../Page404";
 import ResetPassword from "../Auth/Reset_password";
 import Dash from "../Dashboard/Index";
@@ -20,4 +20,15 @@ const Routes = (props: DarkStateProps) => {
     </Switch>
   );
 };
+
+interface PrivateRouteProps extends DarkStateProps{
+  isLoggedIn:boolean
+}
+
+//Implementar posteriormente
+const PrivateRoute: React.FC <PrivateRouteProps>= (props) =>
+  props.isLoggedIn
+    ? <Route { ...props } />
+    : <Redirect to={Path.SignIn} />
+
 export default Routes;

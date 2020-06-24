@@ -18,7 +18,7 @@ import {
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { Autocomplete } from "@material-ui/lab";
-import { ShowSnackBarAlert, AxiosPost } from "../utils";
+import { ShowSnackBarAlert, AxiosPost, Transition } from "../utils";
 import Dropzone from "react-dropzone";
 import {
   CloudUpload,
@@ -27,28 +27,14 @@ import {
   Games,
 } from "@material-ui/icons";
 import { green, red } from "@material-ui/core/colors";
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { PropsAddCard } from "../react-app-env";
 
-export interface PropsAddCard {
-  open: {
-    openSearch: boolean;
-    openFilter: boolean;
-    openNewGame: boolean;
-  };
-  setOpen: React.Dispatch<
-    React.SetStateAction<{
-      openSearch: boolean;
-      openFilter: boolean;
-      openNewGame: boolean;
-    }>
-  >;
-}
 const mbDivisor = 1024 * 1024;
 const maxMbFileSize = 0.2 * mbDivisor; // 5Mb
-
-const platforms = ["PS4", "XboxOne", "PC", "Android", "Ios"];
-const categories = [
+export const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+export const checkedIcon = <CheckBoxIcon fontSize="small" />;
+export const platforms = ["PS4", "XboxOne", "PC", "Android", "Ios"];
+export const categories = [
   "Ação",
   "Aventura",
   "RPG",
@@ -82,7 +68,7 @@ export default function AddNewGame(props: PropsAddCard) {
   const classes = useStyles();
 
   const handleClose = () => {
-    props.setOpen({ ...props.open, openNewGame: false });
+    props!.setOpen!({ ...props!.open!, openNewGame: false });
     setValues({
       title: "",
       description: "",
@@ -103,6 +89,7 @@ export default function AddNewGame(props: PropsAddCard) {
         });
         setLoad(false);
         handleClose();
+        props.listAllCards()
       })
       .catch(({ response }) => {
         setLoad(false);
@@ -309,7 +296,7 @@ export default function AddNewGame(props: PropsAddCard) {
           time={5000}
         />
       )}
-      <Dialog maxWidth="sm" fullWidth={true} open={props.open.openNewGame}>
+      <Dialog TransitionComponent={Transition} maxWidth="sm" fullWidth={true} open={props!.open!.openNewGame}>
         <DialogTitle>{"Adicionar novo jogo"}</DialogTitle>
         <DialogContent>
           <DialogContentText>

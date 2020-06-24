@@ -35,7 +35,7 @@ import { DarkStateProps } from "../react-app-env";
  */
 const SignIn = (props: DarkStateProps) => {
   const UserData = useContext(store);
-  const { SetNewData } = UserData;
+  const { setDataReducer } = UserData;
   const classes = useStyles();
 
   const [path, setPath] = useState("/");
@@ -82,11 +82,11 @@ const SignIn = (props: DarkStateProps) => {
     setPath(path === "/" ? "/auth" : path);
     AxiosPost("/auth/validate", values)
       .then(({ data }) => {
-        setValues({ ...values, load: false, openAuth: true });
         localStorage.setItem("tokenJwtGameland", data.token);
         localStorage.setItem("keepConnectedGameland", String(values.checked));
+        setValues({ ...values, load: false, openAuth: true });
         //Global (seta parâmetros no context)
-        SetNewData({ type: "LOGIN_DATA", values: data });
+        setDataReducer({ type: "LOGIN_DATA", values: data });
       })
       .catch(({ response }) => {
         localStorage.setItem("tokenJwtGameland", "");

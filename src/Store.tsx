@@ -5,6 +5,7 @@ import { UserData } from "./react-app-env";
 interface Action {
   type: string;
   values: UserData;
+  filters: any
 }
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
   token: "",
   //...
 };
+
 
 const store = createContext<any>(initialState);
 const { Provider } = store;
@@ -38,9 +40,9 @@ const reducer = (prevState: UserData, action: Action) => {
 // dentre outras coisas
 
 const StateProvider: React.FC<ReactNode> = ({ children }) => {
-  const [NewData, SetNewData] = useReducer(reducer, initialState);
-
-  return <Provider value={{ NewData, SetNewData }}>{children}</Provider>;
+  const [dataReducer, setDataReducer] = useReducer(reducer, initialState);
+  
+  return <Provider value={{ dataReducer, setDataReducer }}>{children}</Provider>;
 };
 
 export { store, StateProvider };

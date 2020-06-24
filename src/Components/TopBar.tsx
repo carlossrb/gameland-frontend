@@ -26,21 +26,23 @@ import MenuDrawer from "./Menu";
 import { Redirect } from "react-router-dom";
 import Path from "../Routes/Paths.json";
 import { DarkMode } from "../Auth/Copyright";
-import { DarkStateProps } from "../react-app-env";
+import { TopBarProps } from "../react-app-env";
 
-// largura do menu aberto
-const drawerWidth = 210;
 
-const TopBar: React.FC<DarkStateProps> = (props) => {
-  const classes = useStyles();
+/**
+ * Barra superior do sistema
+ * @param {TopBarProps} props
+ */
+const TopBar: React.FC<TopBarProps> = (props) => {
+  const classes = useStyles(props.drawerWidth);
   const [open, setOpen] = React.useState(false);
   const UserData = useContext(store);
-  const { NewData } = UserData;
-  const { permission } = NewData.user;
+  const { dataReducer } = UserData;
+  const { permission } = dataReducer.user;
   const [logout, setLogout] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useTheme();
-  
+
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -74,6 +76,7 @@ const TopBar: React.FC<DarkStateProps> = (props) => {
     setAnchorEl(null);
   };
 
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -87,7 +90,10 @@ const TopBar: React.FC<DarkStateProps> = (props) => {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setOpen(true)
+              props.setOpen(true)
+            }}
             edge="start"
             className={clsx(classes.menuButton, {
               [classes.hide]: open,
@@ -108,20 +114,24 @@ const TopBar: React.FC<DarkStateProps> = (props) => {
             noWrap
           ></Typography>
           <Typography className={classes.title} variant="h6" noWrap>
-            {NewData.user.username}
+            {dataReducer.user.username}
           </Typography>
           <Tooltip title="Tipo de conta" aria-label="add">
             <Chip
               label={
-                permission === 1
-                  ? <Typography variant="subtitle1">Jogador</Typography>
-                  : permission === 2
-                  ? <Typography variant="subtitle1">Admin</Typography>
-                  : permission === 3
-                  ? <Typography variant="subtitle2" noWrap>Produtor</Typography>
-                  : <Typography variant="subtitle1">MasterAccount</Typography>
+                permission === 1 ? (
+                  <Typography variant="subtitle1">Jogador</Typography>
+                ) : permission === 2 ? (
+                  <Typography variant="subtitle1">Admin</Typography>
+                ) : permission === 3 ? (
+                  <Typography variant="subtitle2" noWrap>
+                    Produtor
+                  </Typography>
+                ) : (
+                  <Typography variant="subtitle1">MasterAccount</Typography>
+                )
               }
-              style={{marginLeft:10}}
+              style={{ marginLeft: 10 }}
               color="secondary"
               icon={
                 permission === 1 ? (
@@ -149,7 +159,13 @@ const TopBar: React.FC<DarkStateProps> = (props) => {
           </div>
         </Toolbar>
       </AppBar>
-      <MenuDrawer drawerWidth={drawerWidth} open={open} setOpen={setOpen} />
+      <MenuDrawer
+        {...props}
+        drawerWidth={props.drawerWidth}
+        open={open}
+        setOpen={setOpen}
+        setOpenIndex={props.setOpen}
+      />
       {logout && <Redirect to={Path.SignIn} />}
       {renderMenu}
     </div>
@@ -184,8 +200,8 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     appBarShift: {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: (drawerWidth: number) => drawerWidth,
+      width: (drawerWidth: number) => `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -20,19 +20,34 @@ import {
   VideogameAsset,
 } from "@material-ui/icons";
 import { store } from "../Store";
+import { MenuProps } from "../react-app-env";
 
-interface Props {
-  drawerWidth: number;
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const MenuDrawer: React.FC<Props> = (props) => {
+/**
+ * Menu lateral do sistema
+ * @param {Props} props
+ */
+const MenuDrawer: React.FC<MenuProps> = (props) => {
   const classes = useStyles(props.drawerWidth);
   const theme = useTheme();
   const { open, setOpen } = props;
   const UserData = useContext(store);
-  const { NewData } = UserData;
+  const { dataReducer } = UserData;
+  const [selected, setSelected] = useState(false);
+  const setDataFilter = props.dataCardsFilter[1];
+  const data = props.dataCards;
+
+  const dataFilterFunc = (item: boolean) => {
+    const { _id } = dataReducer.user;
+    setSelected(item);
+    if (item) {
+      let dataAux = data.filter((data) => data.user._id === _id);
+      setDataFilter(dataAux);
+    } else setDataFilter(data);
+  };
+
+  useEffect(() => {
+    dataFilterFunc(selected);
+  }, [data]);
 
   return (
     <Drawer
@@ -49,20 +64,35 @@ const MenuDrawer: React.FC<Props> = (props) => {
       }}
     >
       <div className={classes.toolbar}>
-        <IconButton onClick={() => setOpen(false)}>
+        <IconButton
+          onClick={() => {
+            props.setOpenIndex(false);
+            setOpen(false);
+          }}
+        >
           {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
         </IconButton>
       </div>
       <Divider />
       <List>
-        <ListItem button key={"Todos os jogos"}>
+        <ListItem
+          selected={!selected}
+          onClick={() => dataFilterFunc(false)}
+          button
+          key={"Todos os jogos"}
+        >
           <ListItemIcon className={classes.drawCloseIcon}>
             <AllInclusive />
           </ListItemIcon>
           <ListItemText primary={"Todos os jogos"} />
         </ListItem>
-        {NewData.user.permission > 2 && (
-          <ListItem button key={"Seus jogos"}>
+        {dataReducer.user.permission === 3 && (
+          <ListItem
+            selected={selected}
+            onClick={() => dataFilterFunc(true)}
+            button
+            key={"Seus jogos"}
+          >
             <ListItemIcon className={classes.drawCloseIcon}>
               <VideogameAsset />
             </ListItemIcon>

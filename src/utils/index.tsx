@@ -9,8 +9,10 @@ import {
   Backdrop,
   CircularProgress,
   Typography,
+  Slide,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import { TransitionProps } from "@material-ui/core/transitions";
 
 /**
  * Validar email
@@ -24,13 +26,12 @@ const validateEmail = (email: string) => {
 /**
  * Obtém as requisiçoes get
  * @param {string} adress endpoint da requisição
- * @param {object} body parâmetros
  */
-const AxiosGet = async (adress: string, body: {} = {}) => {
+const AxiosGet = async (adress: string) => {
   API.defaults.headers = {
     authorization: "Bearer " + localStorage.getItem("tokenJwtGameland"),
   };
-  return await API.get(adress, body).then((res) => res);
+  return await API.get(adress).then((res) => res);
 };
 
 /**
@@ -44,6 +45,14 @@ const AxiosPost = async (adress: string, body: {} = {}) => {
   };
   return await API.post(adress, body).then((res) => res);
 };
+
+// Transições para os alerts
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement<any, any> },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 interface PropsSnackBar {
   dispatchClose: () => void;
@@ -164,4 +173,5 @@ export {
   ShowBlackDrop,
   LottieAnimation,
   ShowSnackBarAlert,
+  Transition
 };
