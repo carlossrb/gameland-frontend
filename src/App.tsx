@@ -1,10 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { BrowserRouter, Redirect } from "react-router-dom";
-import {
-  ThemeProvider,
-  createMuiTheme,
-  CssBaseline
-} from "@material-ui/core";
+import { ThemeProvider, createMuiTheme, CssBaseline } from "@material-ui/core";
 import Routes from "./Routes/Routes";
 import { AxiosGet, ShowSnackBarAlert } from "./utils/index";
 import PathRoutes from "./Routes/Paths.json";
@@ -40,6 +36,10 @@ const App: React.FC = () => {
 
   // Redireciona login
   useEffect(() => {
+    console.log("%cGameland.io", "font-size: 50px; color: "+mainPrimaryColor);
+    console.log(
+      "Este é um recurso de navegador voltado para desenvolvedores. Se alguem pediu para que você colasse algo aqui, isso é uma fraude, e pode prejudicar a sua experiência com o QRPoint."
+    );
     const keepConnected =
       localStorage.getItem("keepConnectedGameland") === "true";
     localStorage.setItem("redirectPathGameland", path);

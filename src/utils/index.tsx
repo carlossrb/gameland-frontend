@@ -57,6 +57,18 @@ const AxiosPost = async (adress: string, body: {} = {}) => {
   return await API.post(adress, body).then((res) => res);
 };
 
+/**
+ * Obtém as requisiçoes put
+ * @param {string} adress endpoint da requisição
+ * @param {object} body parâmetros
+ */
+const AxiosPut = async (adress: string, body: {} = {}) => {
+  API.defaults.headers = {
+    authorization: "Bearer " + localStorage.getItem("tokenJwtGameland"),
+  };
+  return await API.put(adress, body).then((res) => res);
+};
+
 // Transições para os alerts
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -185,5 +197,6 @@ export {
   LottieAnimation,
   ShowSnackBarAlert,
   Transition,
-  AxiosDel
+  AxiosDel,
+  AxiosPut
 };

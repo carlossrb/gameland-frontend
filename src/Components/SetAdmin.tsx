@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Backdrop from "@material-ui/core/Backdrop";
 import {
   TextField,
   Button,
@@ -11,13 +10,13 @@ import {
   InputAdornment,
   CircularProgress
 } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
+import { SupervisorAccount } from "@material-ui/icons";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import { validateEmail, AxiosPost, ShowSnackBarAlert } from "../utils/index";
+import { validateEmail, AxiosPut, ShowSnackBarAlert, Transition } from "../utils/index";
 import { green } from "@material-ui/core/colors";
 
 interface PropsModal {
-  openModal: (showModal: boolean) => void;
+  openModal: () => void;
   open: boolean;
 }
 interface State {
@@ -27,23 +26,23 @@ interface State {
 }
 
 /**
- * Abre modal para recuperação de senha
+ * Abre modal para conta Master definir moderadores da plataforma
  * @param {PropsModal} props
  */
-const Password: React.FC<PropsModal> = (props) => {
+const SetAdmin: React.FC<PropsModal> = (props) => {
   const { open, openModal } = props;
   const [email, setEmail] = useState({ isValid: false, email: "" });
   const [load, setLoad] = useState(false);
   const [sendOrnot, setSend] = useState<State>({ msg: "", status: 0 });
 
-  // Envia email de recuperação de senha
-  const sendMail = () => {
+  // Cadastra um jogador como admin
+  const turnAdmin = () => {
     setLoad(true);
-    AxiosPost("/auth/forgot_password", { email: email.email })
+    AxiosPut("/auth/admin", { email: email.email })
       .then((res: any) => {
         setLoad(false);
         setSend({
-          msg: "Email enviado com sucesso!",
+          msg: "Jogador atualizado como administrador!",
           status: 1,
           severity: "success",
         });
@@ -73,19 +72,15 @@ const Password: React.FC<PropsModal> = (props) => {
         />
       )}
       <Dialog
-        open={open || load}
-        onClose={() => openModal(false)}
+        open={open}
+        onClose={() => openModal()}
         closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
+        TransitionComponent={Transition}
       >
-        <DialogTitle>Redefina a sua senha</DialogTitle>
+        <DialogTitle>Conceder privilégios</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Clique em enviar que um link será enviado para você redefinir sua
-            senha
+            Digite o email de um jogador para torná-lo administrador
           </DialogContentText>
           <TextField
             disabled={load}
@@ -121,7 +116,7 @@ const Password: React.FC<PropsModal> = (props) => {
           <Button
             disabled={load}
             size="small"
-            onClick={() => openModal(false)}
+            onClick={() => openModal()}
             variant="outlined"
             color="primary"
           >
@@ -131,12 +126,12 @@ const Password: React.FC<PropsModal> = (props) => {
             disabled={!email.isValid || load}
             size="small"
             variant="contained"
-            endIcon={load ? <CircularProgress size={20} /> : <Send />}
+            endIcon={load ? <CircularProgress size={20} /> : <SupervisorAccount />}
             type="submit"
             color="primary"
-            onClick={sendMail}
+            onClick={turnAdmin}
           >
-            {load ? "Enviando" : "Enviar"}
+            {load ? "Atualizando" : "Atualizar"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -144,4 +139,4 @@ const Password: React.FC<PropsModal> = (props) => {
   );
 };
 
-export default Password;
+export default SetAdmin;

@@ -35,7 +35,7 @@ import {
 } from "@material-ui/icons";
 import { red, blue, yellow } from "@material-ui/core/colors";
 import { store } from "../Store";
-import RatingComponent from "./Rating";
+//import RatingComponent from "./Rating";
 import { ShowSnackBarAlert, AxiosDel, Transition } from "../utils";
 
 interface Props {
@@ -55,6 +55,7 @@ export default function Cards(props: Props) {
     error: false,
     type: false,
   });
+  const [openEvaluation, setopenEvaluation] = useState(false)
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

@@ -27,6 +27,7 @@ import { Redirect } from "react-router-dom";
 import Path from "../Routes/Paths.json";
 import { DarkMode } from "../Auth/Copyright";
 import { TopBarProps } from "../react-app-env";
+import SetAdmin from "./SetAdmin";
 
 
 /**
@@ -41,6 +42,7 @@ const TopBar: React.FC<TopBarProps> = (props) => {
   const { permission } = dataReducer.user;
   const [logout, setLogout] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [turnAdmin, setTurnAdmin] = useState(false)
   const theme = useTheme();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -59,6 +61,9 @@ const TopBar: React.FC<TopBarProps> = (props) => {
       <MenuItem onClick={(value) => handleMenuItemClick(value, 1)}>
         Sair
       </MenuItem>
+      {permission===4 && <MenuItem onClick={(value) => handleMenuItemClick(value, 2)}>
+        Privilégios
+      </MenuItem>}
     </Menu>
   );
 
@@ -71,14 +76,16 @@ const TopBar: React.FC<TopBarProps> = (props) => {
       localStorage.setItem("tokenJwtGameland", "");
       localStorage.setItem("keepConnectedGameland", "false");
       setLogout(true);
+    } else {
+      setTurnAdmin(true)
     }
-
     setAnchorEl(null);
   };
 
 
   return (
     <div className={classes.root}>
+      <SetAdmin openModal={()=>setTurnAdmin(false)} open={turnAdmin}/>
       <CssBaseline />
       <AppBar
         position="fixed"
