@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Container from "@material-ui/core/Container";
-import { LottieAnimation, AxiosGet, ShowSnackBarAlert, AxiosPost } from "../utils";
+import { LottieAnimation, ShowSnackBarAlert, AxiosPost } from "../utils";
 import TopBar from "../Components/TopBar";
 import FloatingBtn from "./FloatingBtn";
 import {
@@ -47,9 +46,10 @@ const Auth: React.FC<DarkStateProps> = (props) => {
     listAllCards();
   }, [activeFilter]);
 
+
   // Lista todos os cards do dash
   const listAllCards = () => {
-    AxiosPost("/product/list", {activeFilter})
+    AxiosPost("/product/list", { activeFilter })
       .then(({ data }: any) => {
         setdataCards(data.products);
         setListMsg({ msg: "tudo ok", error: false, type: false });
@@ -89,18 +89,20 @@ const Auth: React.FC<DarkStateProps> = (props) => {
             severity={listMsg.type ? "error" : "success"}
           />
         )}
-        <Fab
-          onClick={() =>
-            setActiveFilter({ platform: [], category: [], search: "" })
-          }
-          variant="extended"
-          size="small"
-          color={clearOrRefresh ? "primary" : "secondary"}
-          className={style.fabStyleRefresh}
-        >
-          {clearOrRefresh ? <Clear /> : <Refresh />}
-          {clearOrRefresh ? "Limpar todos os filtros" : "Recarregar Cards"}
-        </Fab>
+        {!listMsg.type && (
+          <Fab
+            onClick={() =>
+              setActiveFilter({ platform: [], category: [], search: "" })
+            }
+            variant="extended"
+            size="small"
+            color={clearOrRefresh ? "primary" : "secondary"}
+            className={style.fabStyleRefresh}
+          >
+            {clearOrRefresh ? <Clear /> : <Refresh />}
+            {clearOrRefresh ? "Limpar todos os filtros" : "Recarregar Cards"}
+          </Fab>
+        )}
 
         {dataCardsFilter.length === 0 ? (
           <LottieAnimation
@@ -111,8 +113,10 @@ const Auth: React.FC<DarkStateProps> = (props) => {
           />
         ) : (
           <GridList cellHeight={"auto"} className={style.gridList} cols={3}>
-            {dataCardsFilter.map((e) => (
-              <Cards />
+            {dataCardsFilter.map((dataCard: ProductData) => (
+              <Grow in={true}>
+                <Cards listAllCards={listAllCards} dataCard={dataCard} />
+              </Grow>
             ))}
           </GridList>
         )}

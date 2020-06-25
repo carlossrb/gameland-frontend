@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: (width: number) => width,
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+        duration: theme.transitions.duration.shortest,
       }),
     },
     drawCloseIcon: {
@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerClose: {
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
+        duration: theme.transitions.duration.shortest,
       }),
       overflowX: "hidden",
       width: theme.spacing(7),

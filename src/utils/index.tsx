@@ -35,6 +35,17 @@ const AxiosGet = async (adress: string) => {
 };
 
 /**
+ * Requisição de delete
+ * @param {string} adress endpoint da requisição
+ */
+const AxiosDel = async (adress: string) => {
+  API.defaults.headers = {
+    authorization: "Bearer " + localStorage.getItem("tokenJwtGameland"),
+  };
+  return await API.delete(adress).then((res) => res);
+};
+
+/**
  * Obtém as requisiçoes post
  * @param {string} adress endpoint da requisição
  * @param {object} body parâmetros
@@ -173,5 +184,6 @@ export {
   ShowBlackDrop,
   LottieAnimation,
   ShowSnackBarAlert,
-  Transition
+  Transition,
+  AxiosDel
 };
