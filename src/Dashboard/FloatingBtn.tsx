@@ -12,6 +12,10 @@ import Filter from "./Filter";
 import SearchGame from "./Search";
 import { PropsAddCard } from "../react-app-env";
 
+/**
+ * Componente do botão flutuante inferior no dashboard
+ * @param {PropsAddCard} props 
+ */
 export default function FloatingBtn(props: PropsAddCard) {
   let actions = [
     { icon: <FilterListIcon />, name: "Filtrar" },

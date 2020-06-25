@@ -38,10 +38,16 @@ import { store } from "../Store";
 //import RatingComponent from "./Rating";
 import { ShowSnackBarAlert, AxiosDel, Transition } from "../utils";
 
+
 interface Props {
   dataCard: ProductData;
   listAllCards: () => void
 }
+
+/**
+ * Cartões do dashboard
+ * @param {Props} props 
+ */
 export default function Cards(props: Props) {
   const classes = useStyles();
   const { dataCard } = props;

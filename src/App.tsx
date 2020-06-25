@@ -7,6 +7,9 @@ import PathRoutes from "./Routes/Paths.json";
 import logo from "./Auth/gameland.io.png";
 import { store } from "./Store";
 
+/**
+ * React main do sistema
+ */
 const App: React.FC = () => {
   const UserData = useContext(store);
   const { setDataReducer } = UserData;

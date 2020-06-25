@@ -21,7 +21,10 @@ const Copyright: React.FC<DarkStateProps> = (props) => {
   );
 };
 
-// Seta darkmode na página de login
+/**
+ * Colocar a função de mudar de thema
+ * @param {DarkStateProps} props 
+ */
 export function DarkMode(props: DarkStateProps) {
   const { darkState, setDarkState } = props;
   const theme = useTheme()

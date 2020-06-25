@@ -17,6 +17,11 @@ import clsx from "clsx";
 
 // largura do menu aberto
 const drawerWidth = 210;
+
+/**
+ * Principal componente do dashboard (chama função de carregamento dos cards)
+ * @param {DarkStateProps} props 
+ */
 const Auth: React.FC<DarkStateProps> = (props) => {
   const style = useStyles();
   const [open, setOpen] = useState(false);

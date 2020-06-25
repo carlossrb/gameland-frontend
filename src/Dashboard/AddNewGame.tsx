@@ -50,6 +50,11 @@ interface StateValues {
   category: string[];
   platforms: string[];
 }
+
+/**
+ * Add de novos cartões feita no botão flutuante no dashboard
+ * @param {PropsAddCard} props 
+ */
 export default function AddNewGame(props: PropsAddCard) {
   const [load, setLoad] = useState(false);
   const [values, setValues] = useState<StateValues>({

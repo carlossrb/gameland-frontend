@@ -10,6 +10,11 @@ import { Send } from "@material-ui/icons";
 import { Transition } from "../utils";
 import { PropsAddCard } from "../react-app-env";
 
+/**
+ * Busca pelo título do produto
+ * @param {PropsAddCard} props 
+ */
+
 export default function SearchGame(props: PropsAddCard) {
   const { open } = props;
 

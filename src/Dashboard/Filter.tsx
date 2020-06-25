@@ -17,6 +17,10 @@ interface StateValues {
   platform: string[];
 }
 
+/**
+ * Filtro nos cartões por categoria e plataforma
+ * @param {PropsAddCard} props 
+ */
 export default function Filter(props: PropsAddCard) {
   const [values, setValues] = useState<StateValues>({
     platform: [],
