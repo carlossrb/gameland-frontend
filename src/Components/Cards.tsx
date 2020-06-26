@@ -35,22 +35,22 @@ import {
 } from "@material-ui/icons";
 import { red, blue, yellow } from "@material-ui/core/colors";
 import { store } from "../Store";
-//import RatingComponent from "./Rating";
+import RatingComponent from "./Rating";
 import { ShowSnackBarAlert, AxiosDel, Transition } from "../utils";
-
 
 interface Props {
   dataCard: ProductData;
-  listAllCards: () => void
+  listAllCards: () => void;
 }
 
 /**
  * Cartões do dashboard
- * @param {Props} props 
+ * @param {Props} props
  */
 export default function Cards(props: Props) {
   const classes = useStyles();
-  const { dataCard } = props;
+  //const { dataCard } = props;
+  const [dataCard, setdataCard] = useState({ ...props.dataCard });
   const UserData = useContext(store);
   const { dataReducer } = UserData;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -61,7 +61,7 @@ export default function Cards(props: Props) {
     error: false,
     type: false,
   });
-  const [openEvaluation, setopenEvaluation] = useState(false)
+  const [openEvaluation, setopenEvaluation] = useState(false);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,13 +70,16 @@ export default function Cards(props: Props) {
   const generalPermission =
     dataCard.user._id === dataReducer.user._id ||
     (dataReducer.user.permission !== 1 && dataReducer.user.permission !== 3);
+    
   //permissão de editar é de master ou do dono
   const editPermission =
     dataCard.user._id === dataReducer.user._id ||
     dataReducer.user.permission === 4;
 
- 
+   //Desabilitar botão de avaliação depois de avaliado 
+   const disabled = dataReducer.user.permission !== 4 && dataReducer.user.rating.filter((e:any)=>e.productId===dataCard._id).length>0
 
+  console.log(dataReducer)
   const deleteCardFunc = () => {
     setLoad(true);
     AxiosDel("/product/" + dataCard._id)
@@ -84,7 +87,7 @@ export default function Cards(props: Props) {
         setmsgError({ msg: data.success, type: true, error: false });
         setLoad(false);
         setdelete(false);
-        props.listAllCards()
+        props.listAllCards();
       })
       .catch(({ response }) => {
         setmsgError({
@@ -111,6 +114,13 @@ export default function Cards(props: Props) {
 
   return (
     <>
+      <RatingComponent
+        openEvaluation={openEvaluation}
+        setdataCard={setdataCard}
+        dataCard={dataCard}
+        setopenEvaluation={setopenEvaluation}
+      />
+
       {msgError.type && (
         <ShowSnackBarAlert
           anchorOrigin={["top", "center"]}
@@ -238,11 +248,19 @@ export default function Cards(props: Props) {
               <Comment />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Avaliar jogo">
-            <Button size="small" color="inherit">
-              4.5 <EmojiEmotions style={{ color: blue[700] }} /> 4.7
-              <Star style={{ color: yellow.A400 }} /> 5.0{" "}
-              <SportsEsports style={{ color: "#7d42eb" }} color="secondary" />
+          <Tooltip title={"Avaliar jogo"}>
+            <Button
+              disabled={disabled}
+              size="small"
+              color="inherit"
+              onClick={() => setopenEvaluation(true)}
+            >
+              {dataCard.smilles.toFixed(1)}{" "}
+              <EmojiEmotions style={{ color: blue[700] }} />{" "}
+              {dataCard.stars.toFixed(1)}{" "}
+              <Star style={{ color: yellow.A400 }} />{" "}
+              {dataCard.games.toFixed(1)}{" "}
+              <SportsEsports style={{ color: "#7d42eb" }} />
             </Button>
           </Tooltip>
         </CardActions>

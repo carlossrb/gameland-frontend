@@ -33,6 +33,15 @@ export interface User {
   registerDate: string;
   username: string;
   permission: number;
+  rating: Array<Rating>
+}
+//Interface das notas atribuidas a cada produto
+export interface Rating{
+  _id?: string;
+  productId: string;
+  games: number;
+  smilles: number;
+  stars: number
 }
 //Interface de dados do que vem nas requests em auth
 export interface UserData {
@@ -50,7 +59,10 @@ export interface ProductData {
   productRegisterDate: Date;
   platforms: Array<string>;
   category: Array<string>;
-  stars: Array<number>;
+  stars: number;
+  games: number;
+  smilles: number;
+  ratinglength: number
 }
 
 /**

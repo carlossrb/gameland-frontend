@@ -15,7 +15,8 @@ const initialState = {
     email: "",
     registerDate: "",
     username: "",
-    permission: 1
+    permission: 1,
+    rating: []
   },
   token: "",
   //...
