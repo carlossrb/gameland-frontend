@@ -20,12 +20,14 @@ import {
   DialogActions,
   CircularProgress,
   DialogContent,
+  Tooltip,
 } from "@material-ui/core";
 import { ProductData } from "../react-app-env";
 import { Transition, AxiosPut, ShowSnackBarAlert } from "../utils";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import { store } from "../Store";
 
-export interface SimpleDialogProps {
+interface SimpleDialogProps {
   openEvaluation: boolean;
   setdataCard: React.Dispatch<React.SetStateAction<ProductData>>;
   dataCard: ProductData;
@@ -34,41 +36,40 @@ export interface SimpleDialogProps {
 
 const RatingComponent: React.FC<SimpleDialogProps> = (props) => {
   const [load, setLoad] = React.useState(false);
-  const { openEvaluation, setdataCard, dataCard, setopenEvaluation } = props;
-  const [values, setvalues] = useState({
-    games: 0,
-    stars: 0,
-    smilles: 0,
-    ratinglength: 0,
-  });
-  const { ratinglength, smilles, stars, games } = props.dataCard;
-  const [error, setError] = useState({ msg: "", error: false, type: false });
   const UserData = useContext(store);
-  const { setDataReducer, dataReducer } = UserData;
+  const { dataReducer } = UserData;
+  const { openEvaluation, setdataCard, dataCard, setopenEvaluation } = props;
+
+  const value = dataReducer.user.rating.filter(
+    (e: any) => e.productId === dataCard._id
+  );
+  const [values, setvalues] = useState({
+    games: value.length > 0 ? value[0].games : 0,
+    stars: value.length > 0 ? value[0].stars : 0,
+    smilles: value.length > 0 ? value[0].smilles : 0,
+  });
+
+  const { smilles, stars, games } = props.dataCard;
+  const [error, setError] = useState({ msg: "", error: false, type: false });
 
   const onChangeRating = (newValue: number, index: number, type: number) => {
-    let media = (ratinglength * type + newValue) / (ratinglength + 1);
-    if (index === 1) setvalues({ ...values, games: media });
-    else if (index === 2) setvalues({ ...values, smilles: media });
-    else setvalues({ ...values, stars: media });
+    if (index === 1) setvalues({ ...values, games: newValue || 0 });
+    else if (index === 2) setvalues({ ...values, smilles: newValue || 0 });
+    else setvalues({ ...values, stars: newValue || 0 });
   };
 
   const updateRating = () => {
     setLoad(true);
     AxiosPut("/rating/" + dataCard._id, {
       ...values,
-      ratinglength: ratinglength + 1,
     })
-      .then((e) => {
+      .then(({ data }: any) => {
         setLoad(false);
-        const newLength = ratinglength + 1;
-        setdataCard({ ...dataCard, ...values, ratinglength: newLength });
-        dataReducer.user.rating.push({ productId: dataCard._id, ...values });
-        setDataReducer({ type: "LOGIN_DATA", values: { ...dataReducer } });
+        setdataCard({ ...data.product });
         setError({
           msg: "Obrigado por avaliar!",
-          error: true,
-          type: false,
+          error: false,
+          type: true,
         });
         setopenEvaluation(false);
       })
@@ -103,7 +104,14 @@ const RatingComponent: React.FC<SimpleDialogProps> = (props) => {
         open={openEvaluation}
         closeAfterTransition
       >
-        <DialogTitle>{"Avalie o jogo ("+dataCard.ratinglength+")"}</DialogTitle>
+        <DialogTitle>
+          <Tooltip title="Quantidade de pessoas que avaliaram">
+            <span style={{ display: "flex", alignItems: "center" }}>
+              {"Avalie o jogo (" + dataCard.ratinglength + ")"}
+              <PeopleAltIcon />
+            </span>
+          </Tooltip>
+        </DialogTitle>
         <DialogContent>
           <List>
             <ListItem>
@@ -114,6 +122,7 @@ const RatingComponent: React.FC<SimpleDialogProps> = (props) => {
                 }}
                 disabled={load}
                 name="Games"
+                value={values.games}
                 defaultValue={0}
                 precision={0.5}
                 emptyIcon={<SportsEsportsOutlined fontSize="inherit" />}
@@ -128,6 +137,7 @@ const RatingComponent: React.FC<SimpleDialogProps> = (props) => {
                   onChangeRating(newValue, 2, smilles);
                 }}
                 disabled={load}
+                value={values.smilles}
                 name="Smille"
                 defaultValue={0}
                 precision={0.5}
@@ -141,6 +151,7 @@ const RatingComponent: React.FC<SimpleDialogProps> = (props) => {
                 onChange={(event, newValue: any) => {
                   onChangeRating(newValue, 3, stars);
                 }}
+                value={values.stars}
                 disabled={load}
                 name="Stars"
                 defaultValue={0}
@@ -154,14 +165,16 @@ const RatingComponent: React.FC<SimpleDialogProps> = (props) => {
           <Button
             disabled={load}
             size="small"
-            onClick={() => setopenEvaluation(false)}
+            onClick={() => {
+              setopenEvaluation(false);
+            }}
             variant="outlined"
             color="primary"
           >
             Cancelar
           </Button>
           <Button
-            disabled={load}
+            disabled={load || !values.stars}
             size="small"
             variant="contained"
             endIcon={load ? <CircularProgress size={20} /> : <Star />}

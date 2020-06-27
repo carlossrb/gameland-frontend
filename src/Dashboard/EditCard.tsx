@@ -8,17 +8,12 @@ import {
   Grid,
   TextField,
   Checkbox,
-  makeStyles,
-  Theme,
-  createStyles,
   Typography,
   DialogContentText,
   CircularProgress,
 } from "@material-ui/core";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { Autocomplete } from "@material-ui/lab";
-import { ShowSnackBarAlert, AxiosPost, Transition } from "../utils";
+import { ShowSnackBarAlert, Transition, AxiosPut } from "../utils";
 import Dropzone from "react-dropzone";
 import {
   CloudUpload,
@@ -27,42 +22,25 @@ import {
   Games,
 } from "@material-ui/icons";
 import { green, red } from "@material-ui/core/colors";
-import { PropsAddCard } from "../react-app-env";
+import {  ProductData } from "../react-app-env";
+import { platforms, icon, checkedIcon, categories, useStyles } from "./AddNewGame";
 
 const mbDivisor = 1024 * 1024;
-const maxMbFileSize = 0.2 * mbDivisor; // 5Mb
-export const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-export const checkedIcon = <CheckBoxIcon fontSize="small" />;
-export const platforms = ["PS4", "XboxOne", "PC", "Android", "Ios"];
-export const categories = [
-  "Ação",
-  "Aventura",
-  "RPG",
-  "Simulação",
-  "Esporte",
-  "Corrida",
-];
+const maxMbFileSize = 0.2 * mbDivisor; // 
 
-interface StateValues {
-  img: string;
-  title: string;
-  description: string;
-  category: string[];
-  platforms: string[];
+interface PropsEditCard{
+    openEdit: boolean;
+    setdataCard: React.Dispatch<React.SetStateAction<ProductData>>;
+    dataCard: ProductData;
+    setopenEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
 /**
- * Add de novos cartões feita no botão flutuante no dashboard
- * @param {PropsAddCard} props 
+ * Edita detalhes do cartão correspondente
+ * @param {PropsEditCard} props 
  */
-export default function AddNewGame(props: PropsAddCard) {
+export default function EditCard(props: PropsEditCard) {
   const [load, setLoad] = useState(false);
-  const [values, setValues] = useState<StateValues>({
-    img: "",
-    title: "",
-    description: "",
-    category: [],
-    platforms: [],
+  const [values, setValues] = useState<ProductData>({...props.dataCard
   });
   const [imgError, setImgError] = useState(false);
   const [errorInsert, seterrorInsert] = useState({
@@ -73,19 +51,12 @@ export default function AddNewGame(props: PropsAddCard) {
   const classes = useStyles();
 
   const handleClose = () => {
-    props!.setOpen!({ ...props!.open!, openNewGame: false });
-    setValues({
-      title: "",
-      description: "",
-      category: [],
-      platforms: [],
-      img: "",
-    });
+    props.setopenEdit(false)
   };
 
-  const insertNewGame = () => {
+  const editCard = () => {
     setLoad(true);
-    AxiosPost("/product/", values)
+    AxiosPut("/product/update/"+props.dataCard._id, values)
       .then(({ data }) => {
         seterrorInsert({
           msg: "O jogo foi inserido com sucesso!",
@@ -94,14 +65,14 @@ export default function AddNewGame(props: PropsAddCard) {
         });
         setLoad(false);
         handleClose();
-        props.listAllCards()
+        props.setdataCard({...values})
       })
       .catch(({ response }) => {
         setLoad(false);
         seterrorInsert({
           msg: response
             ? response.data.error
-            : "Houve um problema ao inserir o jogo. Tente novamente!",
+            : "Houve um problema ao editar o jogo. Tente novamente!",
           error: true,
           type: "error",
         });
@@ -120,6 +91,7 @@ export default function AddNewGame(props: PropsAddCard) {
           margin="normal"
           required
           fullWidth
+          value={values.title}
           label="Título"
           onChange={({ target }) =>
             setValues({ ...values, title: target.value })
@@ -135,6 +107,7 @@ export default function AddNewGame(props: PropsAddCard) {
           variant="outlined"
           margin="normal"
           required
+          value={values.description}
           fullWidth
           label="Descrição"
           onChange={({ target }) =>
@@ -301,7 +274,7 @@ export default function AddNewGame(props: PropsAddCard) {
           time={5000}
         />
       )}
-      <Dialog TransitionComponent={Transition} maxWidth="sm" fullWidth={true} open={props!.open!.openNewGame}>
+      <Dialog TransitionComponent={Transition} maxWidth="sm" fullWidth={true} open={props.openEdit}>
         <DialogTitle>{"Adicionar novo jogo"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -334,9 +307,9 @@ export default function AddNewGame(props: PropsAddCard) {
             endIcon={load ? <CircularProgress size={20} /> : <Games />}
             type="submit"
             color="primary"
-            onClick={insertNewGame}
+            onClick={editCard}
           >
-            {load ? "Adicionando" : "Adicionar"}
+            {load ? "Editando" : "Editar"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -344,22 +317,3 @@ export default function AddNewGame(props: PropsAddCard) {
   );
 }
 
-export const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    dropzone: {
-      background: theme.palette.divider,
-      height: theme.spacing(12),
-      cursor: "pointer",
-      borderColor: theme.palette.primary.main,
-      borderWidth: 2,
-      borderRadius: theme.spacing(1),
-      borderStyle: "dashed",
-      margin: theme.spacing(0.7),
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    iconColor: {},
-  })
-);

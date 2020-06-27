@@ -37,11 +37,12 @@ export interface User {
 }
 //Interface das notas atribuidas a cada produto
 export interface Rating{
-  _id?: string;
+  _id?: ProductData._id;
   productId: string;
   games: number;
   smilles: number;
   stars: number
+  userId: User._id
 }
 //Interface de dados do que vem nas requests em auth
 export interface UserData {

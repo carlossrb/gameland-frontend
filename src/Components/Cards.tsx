@@ -37,6 +37,7 @@ import { red, blue, yellow } from "@material-ui/core/colors";
 import { store } from "../Store";
 import RatingComponent from "./Rating";
 import { ShowSnackBarAlert, AxiosDel, Transition } from "../utils";
+import EditCard from "../Dashboard/EditCard";
 
 interface Props {
   dataCard: ProductData;
@@ -62,7 +63,8 @@ export default function Cards(props: Props) {
     type: false,
   });
   const [openEvaluation, setopenEvaluation] = useState(false);
-
+  const [openEdit, setopenEdit] = useState(false);
+  console.log(props)
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -70,16 +72,12 @@ export default function Cards(props: Props) {
   const generalPermission =
     dataCard.user._id === dataReducer.user._id ||
     (dataReducer.user.permission !== 1 && dataReducer.user.permission !== 3);
-    
+
   //permissão de editar é de master ou do dono
   const editPermission =
     dataCard.user._id === dataReducer.user._id ||
     dataReducer.user.permission === 4;
 
-   //Desabilitar botão de avaliação depois de avaliado 
-   const disabled = dataReducer.user.permission !== 4 && dataReducer.user.rating.filter((e:any)=>e.productId===dataCard._id).length>0
-
-  console.log(dataReducer)
   const deleteCardFunc = () => {
     setLoad(true);
     AxiosDel("/product/" + dataCard._id)
@@ -108,7 +106,14 @@ export default function Cards(props: Props) {
       open={Boolean(anchorEl)}
       onClose={() => setAnchorEl(null)}
     >
-      <MenuItem onClick={handleProfileMenuOpen}>Editar conteúdo</MenuItem>
+      <MenuItem
+        onClick={() => {
+          setopenEdit(true);
+          setAnchorEl(null);
+        }}
+      >
+        Editar conteúdo
+      </MenuItem>
     </Menu>
   );
 
@@ -120,7 +125,12 @@ export default function Cards(props: Props) {
         dataCard={dataCard}
         setopenEvaluation={setopenEvaluation}
       />
-
+      <EditCard
+        openEdit={openEdit}
+        setopenEdit={setopenEdit}
+        dataCard={dataCard}
+        setdataCard={setdataCard}
+      />
       {msgError.type && (
         <ShowSnackBarAlert
           anchorOrigin={["top", "center"]}
@@ -165,7 +175,7 @@ export default function Cards(props: Props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Card className={classes.root} variant="outlined">
+      <Card raised className={classes.root} variant="outlined">
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
@@ -203,54 +213,13 @@ export default function Cards(props: Props) {
             className={classes.media}
             image={dataCard.img}
             title={dataCard.title}
+            onClick={() => editPermission && setopenEdit(true)}
           />
         </CardActionArea>
-        <CardContent>
-          <Typography className={classes.name} variant="h5" component="h2">
-            {dataCard.title}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {dataCard.description || "Jogo sem nenhuma descrição"}
-          </Typography>
-          <br />
-          {dataCard.platforms.map((platform, i) => (
-            <Chip
-              style={{ marginRight: 2 }}
-              label={platform}
-              size="small"
-              onDelete={() => console.log("dasi")}
-              deleteIcon={<SportsEsports />}
-              color="primary"
-            />
-          ))}
-          <Divider style={{ marginTop: 5, marginBottom: 5 }} />
-          {dataCard.category.map((cat, i) => (
-            <Chip
-              style={{ marginRight: 2 }}
-              label={cat}
-              size="small"
-              onDelete={() => console.log("dasi")}
-              deleteIcon={<Category />}
-              color="secondary"
-            />
-          ))}
-        </CardContent>
-        <CardActions>
-          {generalPermission && (
-            <Tooltip title="Remover o jogo">
-              <IconButton onClick={() => setdelete(true)}>
-                <Delete style={{ color: red[400] }} />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="Ver e fazer comentários">
-            <IconButton>
-              <Comment />
-            </IconButton>
-          </Tooltip>
+        <CardActions style={{justifyContent:'center'}}>
           <Tooltip title={"Avaliar jogo"}>
             <Button
-              disabled={disabled}
+              //disabled={disabled}
               size="small"
               color="inherit"
               onClick={() => setopenEvaluation(true)}
@@ -263,7 +232,50 @@ export default function Cards(props: Props) {
               <SportsEsports style={{ color: "#7d42eb" }} />
             </Button>
           </Tooltip>
+          <Tooltip title="Ver e fazer comentários">
+            <IconButton>
+              <Comment />
+            </IconButton>
+          </Tooltip>
+          {generalPermission && (
+            <Tooltip title="Remover o jogo">
+              <IconButton onClick={() => setdelete(true)}>
+                <Delete style={{ color: red[400] }} />
+              </IconButton>
+            </Tooltip>
+          )}
         </CardActions>
+        <Divider/>
+        <CardContent>
+          <Typography className={classes.name} variant="h5" component="h2">
+            {dataCard.title}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {dataCard.description || "Jogo sem nenhuma descrição"}
+          </Typography>
+          <br />
+          {dataCard.platforms.map((platform, i) => (
+            <Chip
+            style={{ marginRight: 2, marginBottom:2 }}
+              label={platform}
+              size="small"
+              onDelete={() => console.log("dasi")}
+              deleteIcon={<SportsEsports />}
+              color="primary"
+            />
+          ))}
+          <Divider style={{ marginTop: 5, marginBottom: 5 }} />
+          {dataCard.category.map((cat, i) => (
+            <Chip
+              style={{ marginRight: 2, marginBottom:2 }}
+              label={cat}
+              size="small"
+              onDelete={() => console.log("dasi")}
+              deleteIcon={<Category />}
+              color="secondary"
+            />
+          ))}
+        </CardContent>
         {renderMenu}
       </Card>
     </>
@@ -291,13 +303,13 @@ const useStyles = makeStyles({
   },
   titleheader: {
     whiteSpace: "nowrap",
-    maxWidth: 200,
+    maxWidth: 250,
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
   name: {
     whiteSpace: "nowrap",
-    maxWidth: 200,
+    maxWidth: 250,
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
