@@ -35,6 +35,17 @@ export interface User {
   permission: number;
   rating: Array<Rating>
 }
+
+//Iterface dos comentários por produto
+export interface Note {
+  _id: string;
+  user: User;
+  productId: ProductData._id;
+  date: string;
+  note: string;
+  reply: string;
+  permission: number
+}
 //Interface das notas atribuidas a cada produto
 export interface Rating{
   _id?: ProductData._id;

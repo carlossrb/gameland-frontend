@@ -7,7 +7,6 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  Grow,
   GridList,
 } from "@material-ui/core";
 import { Clear, Refresh } from "@material-ui/icons";
@@ -119,9 +118,7 @@ const Auth: React.FC<DarkStateProps> = (props) => {
         ) : (
           <GridList cellHeight={"auto"} className={style.gridList} cols={3}>
             {dataCardsFilter.map((dataCard: ProductData) => (
-              <Grow in={true}>
-                <Cards listAllCards={listAllCards} dataCard={dataCard} />
-              </Grow>
+                <Cards key={dataCard._id} listAllCards={listAllCards} dataCard={dataCard} />
             ))}
           </GridList>
         )}

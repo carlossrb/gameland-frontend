@@ -34,15 +34,20 @@ interface SimpleDialogProps {
   setopenEvaluation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * Avaliação do jogo de forma dinâmica. Se o usuário avaliou e avaliar novamente, a média sera recalculada
+ * @param props
+ */
 const RatingComponent: React.FC<SimpleDialogProps> = (props) => {
   const [load, setLoad] = React.useState(false);
   const UserData = useContext(store);
   const { dataReducer } = UserData;
   const { openEvaluation, setdataCard, dataCard, setopenEvaluation } = props;
 
-  const value = dataReducer.user.rating.filter(
-    (e: any) => e.productId === dataCard._id
-  );
+  let value =
+    dataReducer.user.permission !== 4
+      ? dataReducer.user.rating.filter((e: any) => e.productId === dataCard._id)
+      : [];
   const [values, setvalues] = useState({
     games: value.length > 0 ? value[0].games : 0,
     stars: value.length > 0 ? value[0].stars : 0,

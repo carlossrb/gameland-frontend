@@ -38,6 +38,7 @@ import { store } from "../Store";
 import RatingComponent from "./Rating";
 import { ShowSnackBarAlert, AxiosDel, Transition } from "../utils";
 import EditCard from "../Dashboard/EditCard";
+import Notes from "./Notes"
 
 interface Props {
   dataCard: ProductData;
@@ -51,7 +52,7 @@ interface Props {
 export default function Cards(props: Props) {
   const classes = useStyles();
   //const { dataCard } = props;
-  const [dataCard, setdataCard] = useState({ ...props.dataCard });
+  const [dataCard, setdataCard] = useState(props.dataCard);
   const UserData = useContext(store);
   const { dataReducer } = UserData;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -62,9 +63,9 @@ export default function Cards(props: Props) {
     error: false,
     type: false,
   });
+  const [openNotes, setOpenNotes] = useState(false)
   const [openEvaluation, setopenEvaluation] = useState(false);
   const [openEdit, setopenEdit] = useState(false);
-  console.log(props)
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -77,6 +78,7 @@ export default function Cards(props: Props) {
   const editPermission =
     dataCard.user._id === dataReducer.user._id ||
     dataReducer.user.permission === 4;
+
 
   const deleteCardFunc = () => {
     setLoad(true);
@@ -119,6 +121,11 @@ export default function Cards(props: Props) {
 
   return (
     <>
+      {openNotes && <Notes
+        openNotes={openNotes}
+        dataCard={dataCard}
+        setOpenNotes={setOpenNotes}
+      />}
       <RatingComponent
         openEvaluation={openEvaluation}
         setdataCard={setdataCard}
@@ -233,7 +240,9 @@ export default function Cards(props: Props) {
             </Button>
           </Tooltip>
           <Tooltip title="Ver e fazer comentários">
-            <IconButton>
+            <IconButton
+              onClick={()=>setOpenNotes(true)}
+            >
               <Comment />
             </IconButton>
           </Tooltip>
@@ -258,6 +267,7 @@ export default function Cards(props: Props) {
             <Chip
             style={{ marginRight: 2, marginBottom:2 }}
               label={platform}
+              key={i}
               size="small"
               onDelete={() => console.log("dasi")}
               deleteIcon={<SportsEsports />}
@@ -269,6 +279,7 @@ export default function Cards(props: Props) {
             <Chip
               style={{ marginRight: 2, marginBottom:2 }}
               label={cat}
+              key={i}
               size="small"
               onDelete={() => console.log("dasi")}
               deleteIcon={<Category />}

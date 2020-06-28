@@ -9,7 +9,7 @@ import {
   Backdrop,
   CircularProgress,
   Typography,
-  Slide,
+  Slide
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { TransitionProps } from "@material-ui/core/transitions";
@@ -85,6 +85,10 @@ interface PropsSnackBar {
   msg: string;
   severity?: "info" | "success" | "warning" | "error";
 }
+/**
+ * Mostra pequenas mensagens coloridas na tela para informação
+ * @param props 
+ */
 const ShowSnackBarAlert: React.FC<PropsSnackBar> = (props) => {
   const {
     dispatchClose,
@@ -126,7 +130,10 @@ interface BlacdropProps {
   color?: string;
   open: boolean;
 }
-
+/**
+ * Load circular com fundo negro
+ * @param props 
+ */
 const ShowBlackDrop: React.FC<BlacdropProps> = (props) => {
   const classes = useStyles("#fff");
 
