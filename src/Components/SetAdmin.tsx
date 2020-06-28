@@ -8,11 +8,16 @@ import {
   DialogContentText,
   DialogTitle,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import { SupervisorAccount } from "@material-ui/icons";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import { validateEmail, AxiosPut, ShowSnackBarAlert, Transition } from "../utils/index";
+import {
+  validateEmail,
+  AxiosPut,
+  ShowSnackBarAlert,
+  Transition,
+} from "../utils/index";
 import { green } from "@material-ui/core/colors";
 
 interface PropsModal {
@@ -46,7 +51,7 @@ const SetAdmin: React.FC<PropsModal> = (props) => {
           status: 1,
           severity: "success",
         });
-        setEmail({isValid:false, email:''})
+        setEmail({ isValid: false, email: "" });
       })
       .catch(({ response }: any) => {
         setLoad(false);
@@ -95,6 +100,9 @@ const SetAdmin: React.FC<PropsModal> = (props) => {
             value={email.email}
             autoComplete="email"
             autoFocus
+            onKeyPress={({ charCode }) =>
+              charCode === 13 && validateEmail(email.email) && turnAdmin()
+            }
             InputProps={{
               endAdornment: email.isValid && (
                 <InputAdornment position="end">
@@ -126,7 +134,9 @@ const SetAdmin: React.FC<PropsModal> = (props) => {
             disabled={!email.isValid || load}
             size="small"
             variant="contained"
-            endIcon={load ? <CircularProgress size={20} /> : <SupervisorAccount />}
+            endIcon={
+              load ? <CircularProgress size={20} /> : <SupervisorAccount />
+            }
             type="submit"
             color="primary"
             onClick={turnAdmin}

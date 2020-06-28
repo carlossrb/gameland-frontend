@@ -146,7 +146,6 @@ const NoteList: React.FC<NoteListProps> = (props) => {
             onChange={({ target }) => setValue(target.value)}
             value={value}
             maxLength={144}
-            autoFocus={replyUser}
             onKeyPress={({ charCode }) => {
               if (note && charCode === 13) {
                 setReply();

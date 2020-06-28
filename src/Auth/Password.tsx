@@ -9,7 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
@@ -47,7 +47,7 @@ const Password: React.FC<PropsModal> = (props) => {
           status: 1,
           severity: "success",
         });
-        setEmail({isValid:false, email:''})
+        setEmail({ isValid: false, email: "" });
       })
       .catch(({ response }: any) => {
         setLoad(false);
@@ -100,6 +100,9 @@ const Password: React.FC<PropsModal> = (props) => {
             value={email.email}
             autoComplete="email"
             autoFocus
+            onKeyPress={({ charCode }) =>
+              charCode === 13 && validateEmail(email.email) && sendMail()
+            }
             InputProps={{
               endAdornment: email.isValid && (
                 <InputAdornment position="end">
