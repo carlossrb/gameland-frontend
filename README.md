@@ -28,4 +28,11 @@ Alguns pontos de melhorias podem ser inseridos, a exemplo de:
  3. Scroll infinito para otimização de requests em caso do aumento do número de produtos na página;
  4. Melhor otimização da responsividade para mobile, apesar de já apresentar uma responsividade deboa parte dos componentes;
  5. Níveis de permissão atribuídos;
- 6. Etc.
+ 6. I18n;
+ 7. Etc.
+
+## Observações
+
+**O sistema de avaliação é dinâmico, isto é, o usuário pode reavaliar que a nota média será sempre recalculada e exibida com o novo resultado, desconsiderando o anterior.
+
+**O envio de email pelo cliente smtp demora um pouco
