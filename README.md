@@ -33,6 +33,6 @@ Alguns pontos de melhorias podem ser inseridos, a exemplo de:
 
 ## Observações
 
-**O sistema de avaliação é dinâmico, isto é, o usuário pode reavaliar que a nota média será sempre recalculada e exibida com o novo resultado, desconsiderando o anterior.
+**O sistema de avaliação é dinâmico, isto é, o usuário pode reavaliar que a nota média será sempre recalculada e exibida com o novo resultado, desconsiderando o anterior.**
 
-**O envio de email pelo cliente smtp demora um pouco
+**O envio de email pelo cliente smtp demora um pouco**
