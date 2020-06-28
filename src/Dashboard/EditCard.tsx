@@ -275,7 +275,7 @@ export default function EditCard(props: PropsEditCard) {
         />
       )}
       <Dialog TransitionComponent={Transition} maxWidth="sm" fullWidth={true} open={props.openEdit}>
-        <DialogTitle>{"Adicionar novo jogo"}</DialogTitle>
+        <DialogTitle>{"Editar jogo"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {"Preencha os dados e anexe a imagem do seu jogo no tamanho máximo de " +
