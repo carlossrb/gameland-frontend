@@ -13,7 +13,7 @@ const Copyright: React.FC<DarkStateProps> = (props) => {
         <DarkMode {...props}  />
         {"Copyright © "}
         <Link style={{ color: theme.palette.primary.main }} to="/">
-          Gameland.io
+          Gameland
         </Link>{" "}
         {new Date().getFullYear()}
       </Typography>

@@ -1,4 +1,4 @@
-# Gameland.io
+# Gameland
 
 Webapp para divulgação e avaliação de games. Principais tecnologias de **front-end** utilizadas foram:
 

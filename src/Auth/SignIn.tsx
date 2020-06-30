@@ -119,7 +119,7 @@ const SignIn = (props: DarkStateProps) => {
         <div className={classes.paper}>
           <img src={logo} alt="gameland.io" />
           <Typography component="h1" variant="h5">
-            Entrar no Gameland.io
+            Entrar no Gameland
           </Typography>
 
           <form className={classes.form} noValidate>

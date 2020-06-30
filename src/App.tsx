@@ -39,7 +39,7 @@ const App: React.FC = () => {
 
   // Redireciona login
   useEffect(() => {
-    console.log("%cGameland.io", "font-size: 50px; color: "+mainPrimaryColor);
+    console.log("%cGameland", "font-size: 50px; color: "+mainPrimaryColor);
     console.log(
       "Este é um recurso de navegador voltado para desenvolvedores. Se alguem pediu para que você colasse algo aqui, isso é uma fraude, e pode prejudicar a sua experiência com o QRPoint."
     );
